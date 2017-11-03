@@ -1,18 +1,26 @@
 from twitter import *
+import numpy as np
+import sys
 
-def getLastEPNTweet(AT,AT_S,CON,CON_S):
+np.set_printoptions(threshold=sys.maxsize)
+
+def getTweets(AT,AT_S,CON,CON_S, mentioned="@lopezobrador_"):
     
     t = Twitter(auth=OAuth(AT,AT_S,CON,CON_S))
 
-    tweets = list(t.statuses.user_timeline(screen_name="EPN",count=1))
+    tweets = t.search.tweets(q=mentioned)
 
-    #for tweet in tweets:
-        #print(tweet['text'])
-    return tweets[0]['text'] + " - EPN" 
+    tweet = tweets['statuses'][4]
+    #for tweet in tweets['statuses']:
+    text = tweet['text']
+    print(str(text))
+    print(len(text))
+    for word in text.split():
+        print(word)
 
 AT = "880668541-hAfZ3IqqTgc1aJNjJzEojfjX0tD9rHF9Q6zNQ3BZ"
 AT_S = "tl98z1tdnCPRWx8YY4HkZVxbbEoaXfJv4XTmNazFvBb8y"
 CON = "kgFzF4dC6jJC1bynLhOSvWFrV"
 CON_S = "gKX4yAWrSamlGrh9iatOjcfUsrenjqyl4QnfmvvDQMocds0XHv" 
 
-print(getLastEPNTweet(AT,AT_S,CON,CON_S))
+getTweets(AT,AT_S,CON,CON_S, mentioned="@lopezobrador_")
