@@ -2,7 +2,9 @@ from twitter import *
 import pprint
 pp = pprint.PrettyPrinter(indent=4)
 
-def getLastEPNTweet(AT,AT_S,CON,CON_S):
+np.set_printoptions(threshold=sys.maxsize)
+
+def getTweets(AT,AT_S,CON,CON_S, mentioned="@lopezobrador_"):
     
     t = Twitter(auth=OAuth(AT,AT_S,CON,CON_S))
 
