@@ -1,6 +1,7 @@
 if __name__=='__main__':
 
     import os
+    import pprint as pp
     from TwitterClient import TwitterClient
     AT = os.environ.get('AT', None)
     AT_S = os.environ.get('AT_S', None)
@@ -8,4 +9,7 @@ if __name__=='__main__':
     CON_S = os.environ.get('CON_S', None)
 
     client = TwitterClient(AT=AT, AT_S=AT_S, CON=CON, CON_S=CON_S)
-    print(client.twitter)
+    #client.getTweets("@lopezobrador_")
+
+    client.cleanData("rawtweets.csv")
+
