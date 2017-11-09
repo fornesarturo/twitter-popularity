@@ -22,7 +22,3 @@ if __name__=='__main__':
         print ("Done.")
     else:
         print ("False.")
-
-    # Get new tweets
-
-    client = TwitterClient(AT=AT, AT_S=AT_S, CON=CON, CON_S=CON_S)
