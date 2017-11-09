@@ -19,7 +19,7 @@ class TwitterClient:
 
         self.saveTweetsCSV(textArray, "rawtweets.csv")
 
-    def cleanData(self, path = "rawtweets.csv"):
+    def cleanData(self, path = "rawtweets.csv", debug=False):
         # Clean the data you got from getTweets, again, store in this class or
         # in a temp_file.
         import unidecode
@@ -37,7 +37,8 @@ class TwitterClient:
                     cleanWords.append(wordU)
             cleanData[i] = [" ".join(cleanWords), v[1]]
 
-        self.prettyP(cleanData)
+        if (debug):
+            self.prettyP(cleanData)
         return cleanData # Dictionary of cleansed tweets with assigned value
 
     def toCSV(self):
