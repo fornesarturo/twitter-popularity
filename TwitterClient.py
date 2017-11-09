@@ -7,7 +7,7 @@ class TwitterClient:
     def getTweets(self, queryParam):
         # Get Tweets and put them somewhere locally in this class or a
         # temp_file.
-       
+
         feed = self.twitter.GetSearch(term=queryParam)
         textArray = []
 
@@ -18,8 +18,6 @@ class TwitterClient:
                 textArray.append(tweet.text)
 
         self.saveTweetsCSV(textArray, "rawtweets.csv")
-        
-        
 
     def cleanData(self, path = "rawtweets.csv"):
         # Clean the data you got from getTweets, again, store in this class or
@@ -38,7 +36,7 @@ class TwitterClient:
                 if wordU not in jData:
                     cleanWords.append(wordU)
             cleanData[i] = [" ".join(cleanWords), v[1]]
-        
+
         self.prettyP(cleanData)
         return cleanData # Dictionary of cleansed tweets with assigned value
 
@@ -72,11 +70,10 @@ class TwitterClient:
             next(readCSV, None)
             for i, row in enumerate(readCSV):
                 gradedTweets[i] = [row[0], row[1]]
-        
+
         return gradedTweets # Dictionary of tweets with assigned value
 
     def prettyP(self, data):
         import pprint
         pp = pprint.PrettyPrinter(indent=4)
         pp.pprint(data)
-        
