@@ -29,6 +29,7 @@ stopArray += ["x"]
 stopArray += ["y","ya","yo"]
 stopArray += ["z"]
 stopArray += ["él","ésa","ésas","ése","ésos","ésta","éstas","éste","éstos","última","últimas","último","últimos"]
+stopArray += list('''!()-[]{};:'´"\,<>./?@=#$%^&*_+~''')
 
 stopDict = {}
 
