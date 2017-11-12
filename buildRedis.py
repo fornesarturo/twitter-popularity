@@ -1,31 +1,49 @@
-if __name__=='__main__':
+import os
+import pprint as pp
+from TwitterClient import TwitterClient
+from RedisClient import RedisClient
 
-    import os
-    import datetime
-    import pprint as pp
-    from TwitterClient import TwitterClient
-    from RedisClient import RedisClient
-    
-
+def getKeys():
     AT = os.environ.get('AT', None)
     AT_S = os.environ.get('AT_S', None)
     CON = os.environ.get('CON', None)
     CON_S = os.environ.get('CON_S', None)
+    return (AT, AT_S, CON, CON_S)
 
-    # Building the database
+def setClient():
+    AT, AT_S, CON, CON_S = getKeys()
     client = TwitterClient(AT=AT, AT_S=AT_S, CON=CON, CON_S=CON_S)
-    client.getTweets("lopezobrador_", "2017-11-01", 10, "rawtweets.csv")
+    return client
 
-    # Cleaning data
-    cleanedData = client.cleanData("alltweets.csv", True)
-    
-    # Doing redis stuff
+def cleanCSVData(client, debug = False, path = "alltweets.csv"):
+    data = client.cleanData(path, debug)
+    doREDIS(data)
+    return data
+
+def doREDIS(cleanedData):
     redisClient = RedisClient()
     redisClient.cleanRedis()
     if redisClient.populateRedis(cleanedData):
         print ("Done.")
     else:
         print ("False.")
+
+def main():
+    
+    client = setClient()
+
+    client.getTweets("JorgeGCastaneda", "2017-11-01", 10, "castanedatweets.csv")
+    client.getTweets("Mzavalagc", "2017-11-01", 10, "zavalatweets.csv")
+    client.getTweets("JoseAMeadeK", "2017-11-01", 10, "meadetweets.csv")
+
+    ready = input("Ready to clean? (Write yes to proceed)\n")
+    if ready.lower() == "yes":
+        cleanCSVData(client)
+
+    
+if __name__=='__main__':
+    
+    main()
 
 '''
 

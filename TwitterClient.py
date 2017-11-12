@@ -31,7 +31,7 @@ class TwitterClient:
 
         self.saveTweetsCSV(textArray, file)
 
-    def cleanData(self, path = "rawtweets.csv", debug=False):
+    def cleanData(self, path = "alltweets.csv", debug=False):
         # Clean the data you got from getTweets, again, store in this class or
         # in a temp_file.
         import unidecode
