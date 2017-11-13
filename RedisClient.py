@@ -38,12 +38,12 @@ class RedisClient:
                 self.toAdd.add(phrase)
         return phraseValue
 
-    def calculatePopularity(pathToCSV):
+    def calculatePopularity(self, pathToCSV):
         import pandas as pd
 
         accum = 0
         csvDataFrame = pd.read_csv(pathToCSV)
         for i, row in csvDataFrame.iterrows():
             words = row['Tweet']
-            accum += getTweetValue(words)
+            accum += self.getTweetValue(words)
         return accum / csvDataFrame.size

@@ -1,9 +1,11 @@
-import os
-import pprint as pp
+"""
+This module aims to build the Database of Words.
+"""
 from TwitterClient import TwitterClient
 from RedisClient import RedisClient
 
 def getKeys():
+    import os
     AT = os.environ.get('AT', None)
     AT_S = os.environ.get('AT_S', None)
     CON = os.environ.get('CON', None)
