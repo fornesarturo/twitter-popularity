@@ -42,7 +42,6 @@ def main():
     if ready.lower() == "yes":
         cleanCSVData(client)
 
-    
 if __name__=='__main__':
     
     main()
