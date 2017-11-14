@@ -34,9 +34,9 @@ def main():
     
     client = setClient()
 
-    client.getTweets("JorgeGCastaneda", "2017-11-01", 10, "castanedatweets.csv")
-    client.getTweets("Mzavalagc", "2017-11-01", 10, "zavalatweets.csv")
-    client.getTweets("JoseAMeadeK", "2017-11-01", 10, "meadetweets.csv")
+    #client.getTweets("JorgeGCastaneda", "2017-11-01", 10, "castanedatweets.csv")
+    #client.getTweets("Mzavalagc", "2017-11-01", 10, "zavalatweets.csv")
+    #client.getTweets("JoseAMeadeK", "2017-11-01", 10, "meadetweets.csv")
 
     ready = input("Ready to clean? (Write yes to proceed)\n")
     if ready.lower() == "yes":
@@ -79,4 +79,3 @@ def getTweets(self, account, date, file = "rawtweets.csv"):
 
         self.saveTweetsCSV(textArray, file)
 '''
-

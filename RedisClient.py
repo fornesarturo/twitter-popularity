@@ -1,4 +1,9 @@
+"""
+RedisClient handles interaction with a local Redis Database.
+"""
 class RedisClient:
+    """Handles interaction with a local Redis Database.
+    """
     def __init__(self, redisHost='localhost', redisPort='6379', redisDb=0):
         import redis
         pool = redis.ConnectionPool(host=redisHost, port=redisPort, db=redisDb)
@@ -31,8 +36,8 @@ class RedisClient:
         phraseValue = 0
         for word in phrase:
             if self.redis.exists(word):
-                wordSum = int(self.redis.hget(word, "sum").decode())
-                wordCount = int(self.redis.hget(word, "count").decode())
+                wordSum = float(self.redis.hget(word, "sum").decode())
+                wordCount = float(self.redis.hget(word, "count").decode())
                 phraseValue += wordSum / wordCount
             else:
                 self.toAdd.add(phrase)
@@ -45,5 +50,5 @@ class RedisClient:
         csvDataFrame = pd.read_csv(pathToCSV)
         for i, row in csvDataFrame.iterrows():
             words = row['Tweet']
-            accum += self.getTweetValue(words)
-        return accum / csvDataFrame.size
+            accum = accum + self.getTweetValue(words)
+        return accum/csvDataFrame.size
