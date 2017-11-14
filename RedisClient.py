@@ -8,18 +8,20 @@ class RedisClient:
         import redis
         pool = redis.ConnectionPool(host=redisHost, port=redisPort, db=redisDb)
         self.redis = redis.Redis(connection_pool=pool)
-        self.toAdd = set()
+        self.to_add = set()
 
-    def cleanRedis(self):
+    def clean_redis(self):
+        """Clean the Database.
+        """
         self.redis.flushdb()
 
-    def populateRedis(self, data):
+    def populate_redis(self, data):
         """
         data has the following format
             {index: [tweet, value], ...}
         """
-        if (self.redis.ping()):
-            for i, (tweet, value) in zip(data.keys(), data.values()):
+        if self.redis.ping():
+            for (tweet, value) in data.values():
                 words = tweet.split(" ")
 
                 for word in words:
@@ -32,23 +34,27 @@ class RedisClient:
             return True
         return False
 
-    def getTweetValue(self, phrase):
-        phraseValue = 0
+    def get_tweet_value(self, phrase):
+        """Based on a tweet as string, return its value.
+        """
+        phrase_value = 0
         for word in phrase:
             if self.redis.exists(word):
-                wordSum = float(self.redis.hget(word, "sum").decode())
-                wordCount = float(self.redis.hget(word, "count").decode())
-                phraseValue += wordSum / wordCount
+                word_sum = float(self.redis.hget(word, "sum").decode())
+                word_count = float(self.redis.hget(word, "count").decode())
+                phrase_value += word_sum / word_count
             else:
-                self.toAdd.add(phrase)
-        return phraseValue
+                self.to_add.add(phrase)
+        return phrase_value
 
-    def calculatePopularity(self, pathToCSV):
+    def calculate_popularity(self, path_to_csv):
+        """Return the popularity of the tweets in a CSV.
+        """
         import pandas as pd
 
         accum = 0
-        csvDataFrame = pd.read_csv(pathToCSV)
-        for i, row in csvDataFrame.iterrows():
+        csv_dataframe = pd.read_csv(path_to_csv)
+        for i, row in csv_dataframe.iterrows():
             words = row['Tweet']
-            accum = accum + self.getTweetValue(words)
-        return accum/csvDataFrame.size
+            accum = accum + self.get_tweet_value(words)
+        return accum/csv_dataframe.size

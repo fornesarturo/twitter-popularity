@@ -4,35 +4,47 @@ This module aims to build the Database of Words.
 from TwitterClient import TwitterClient
 from RedisClient import RedisClient
 
-def getKeys():
+def get_keys():
+    """Environment variables.
+    """
     import os
-    AT = os.environ.get('AT', None)
-    AT_S = os.environ.get('AT_S', None)
-    CON = os.environ.get('CON', None)
-    CON_S = os.environ.get('CON_S', None)
-    return (AT, AT_S, CON, CON_S)
+    access_token = os.environ.get('AT', None)
+    access_token_secret = os.environ.get('AT_S', None)
+    consumer_key = os.environ.get('CON', None)
+    consumer_key_secret = os.environ.get('CON_S', None)
+    return (access_token, access_token_secret, consumer_key, consumer_key_secret)
 
-def setClient():
-    AT, AT_S, CON, CON_S = getKeys()
-    client = TwitterClient(AT=AT, AT_S=AT_S, CON=CON, CON_S=CON_S)
+def set_client():
+    """Get Twitter Client
+    """
+    access_token, access_token_secret, consumer_key, consumer_key_secret = get_keys()
+    client = TwitterClient(AT=access_token,
+                           AT_S=access_token_secret,
+                           CON=consumer_key,
+                           CON_S=consumer_key_secret)
     return client
 
-def cleanCSVData(client, debug = False, path = "alltweets.csv"):
-    data = client.cleanData(path, debug)
-    doREDIS(data)
+def clean_csv_data(client, debug=False, path="alltweets.csv"):
+    """Interface to Data Cleaning.
+    """
+    data = client.clean_data(path, debug)
+    do_redis(data)
     return data
 
-def doREDIS(cleanedData):
-    redisClient = RedisClient()
-    redisClient.cleanRedis()
-    if redisClient.populateRedis(cleanedData):
-        print ("Done.")
+def do_redis(cleaned_data):
+    """Interface to Redis operations.
+    """
+    redis_client = RedisClient()
+    redis_client.clean_redis()
+    if redis_client.populate_redis(cleaned_data):
+        print("Done.")
     else:
-        print ("False.")
+        print("False.")
 
 def main():
-    
-    client = setClient()
+    """Main function
+    """
+    client = set_client()
 
     #client.getTweets("JorgeGCastaneda", "2017-11-01", 10, "castanedatweets.csv")
     #client.getTweets("Mzavalagc", "2017-11-01", 10, "zavalatweets.csv")
@@ -40,10 +52,9 @@ def main():
 
     ready = input("Ready to clean? (Write yes to proceed)\n")
     if ready.lower() == "yes":
-        cleanCSVData(client)
+        clean_csv_data(client)
 
-if __name__=='__main__':
-    
+if __name__ == '__main__':
     main()
 
 '''

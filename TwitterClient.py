@@ -1,88 +1,109 @@
+"""
+TwitterClient handles interaction with Twitter API.
+"""
+
 class TwitterClient:
-    
-    def __init__(self, AT, AT_S, CON, CON_S, redisHost='localhost', redisPort='6379', redisDb=0):
+    """
+    TwitterClient handles interaction with Twitter API.
+    """
+    def __init__(self, AT, AT_S, CON, CON_S):
         import twitter
-        self.twitter = twitter.api.Api(consumer_key=CON, consumer_secret=CON_S, access_token_key=AT, access_token_secret=AT_S, tweet_mode='extended')
+        self.twitter = twitter.api.Api(consumer_key=CON,
+                                       consumer_secret=CON_S,
+                                       access_token_key=AT,
+                                       access_token_secret=AT_S,
+                                       tweet_mode='extended')
 
-    def getTweets(self, account, initialDate, rangeD = 0, file = "rawtweets.csv", debug=False):
-        # Get Tweets and put them somewhere locally in this class or a
-        # temp_file.
+    def get_tweets(self, account, initial_date=None, range_date=0, file="rawtweets.csv"):
+        """
+        Get Tweets and put them in a temp_file.
+        """
+        import datetime as dt
 
-        # q=to%3Alopezobrador_ %40lopezobrador_ since%3A2017-11-01 until%3A2017-11-10&count=100
-        import datetime
-        if initialDate == datetime.datetime.now().strftime("%Y-%m-%d"):
-            query = "q=to%3A" + account + " %40" + account + " since%3A" + initialDate + "&count=100"
+        if initial_date == dt.datetime.now().strftime("%Y-%m-%d"):
+            query = "q=to%3A" + account + " %40" + account +\
+                    " since%3A" + initial_date +\
+                    "&count=100"
         else:
-            untilD = datetime.datetime.strptime(initialDate, "%Y-%m-%d") + datetime.timedelta(days=rangeD)
-            query = "q=to%3A" + account + " %40" + account + " since%3A" + initialDate + " until%3A" + untilD.strftime("%Y-%m-%d") + "&count=100"
-        
+            until = dt.datetime.strptime(initial_date, "%Y-%m-%d") + dt.timedelta(days=range_date)
+            query = "q=to%3A" + account + " %40" + account +\
+                    " since%3A" + initial_date+\
+                    " until%3A" + until.strftime("%Y-%m-%d")+"&count=100"
+
         feed = self.twitter.GetSearch(raw_query=query)
-        
-        textArray = []
-        if debug:
-            print(query)
+        text_array = []
         for tweet in feed:
-            if debug:
-                self.prettyP(tweet)
-            if(tweet.full_text):
-                textArray.append(tweet.full_text)
+            if tweet.full_text:
+                text_array.append(tweet.full_text)
             else:
-                textArray.append(tweet.text)
+                text_array.append(tweet.text)
 
-        self.saveTweetsCSV(textArray, file)
+        self.save_tweets_csv(text_array, file)
 
-    def cleanData(self, path = "alltweets.csv", debug=False):
-        # Clean the data you got from getTweets, again, store in this class or
-        # in a temp_file.
+    def clean_data(self, path="alltweets.csv", debug=False):
+        """Clean the data you got from getTweets.
+        Return a dictionary of cleansed tweets with assigned value
+        """
         import unidecode
-        symbols = list('''!()-[]{};:+'´"\,<>.=/?@#$%^&*_~''')
+        symbols = list('''!()-[]{};:+'´"\\,<>.=/?@#$%^&*_~''')
 
-        data = self.openTweetsCSV(path)
-        jData = self.openStopWords('stopwords.json')
+        data = self.open_tweets_csv(path)
+        json_data = self.open_stop_words('stopwords.json')
 
-        cleanData = {}
-        for i, v in data.items():
-            wordsArray = v[0].split(" ")
-            cleanWords = []
-            for word in wordsArray:
-                wordU = unidecode.unidecode(word.lower())
-                if wordU and wordU not in jData and word[0] != '@' and word[0] != '#' and wordU.find("http"):
-                    for letter in wordU:
+        clean_data = {}
+        for i, value in data.items():
+            words_array = value[0].split(" ")
+            clean_words = []
+            for word in words_array:
+                word_uni = unidecode.unidecode(word.lower())
+                if word_uni and word_uni not in json_data and \
+                word[0] != '@' and word[0] != '#' and word_uni.find("http"):
+                    for letter in word_uni:
                         if letter in symbols:
-                            wordU = wordU.replace(letter, '')
-                    wordU = wordU.replace('\n', '')
-                    if len(wordU) > 0 and cleanData != "":
-                        cleanWords.append(wordU)
-            cleanData[i] = [" ".join(cleanWords), v[1]]
+                            word_uni = word_uni.replace(letter, '')
+                    word_uni = word_uni.replace('\n', '')
+                    word_length = len(word_uni)
+                    if word_length > 0 and clean_data != "":
+                        clean_words.append(word_uni)
+            clean_data[i] = [" ".join(clean_words), value[1]]
 
-        if (debug):
-            self.prettyP(cleanData)
-        return cleanData # Dictionary of cleansed tweets with assigned value
+        if debug:
+            self.pretty_print(clean_data)
+        return clean_data
 
-    def openStopWords(self, path):
+    def open_stop_words(self, path):
+        """Returns stop words as a json dictionary.
+        """
         import json
-        with open(path) as jFile:
-            jData = json.load(jFile)
-        return jData
+        with open(path) as json_file:
+            json_data = json.load(json_file)
+        return json_data
 
-    def saveTweetsCSV(self, data, path = "rawtweets.csv"):
+    def save_tweets_csv(self, data, path="rawtweets.csv"):
+        """Save Tweets as CSV file.
+        """
         import pandas as pd
-        df = pd.DataFrame(data, columns=["Tweet"])
-        df["Value"] = 'Undef'
-        df.to_csv(path, index=False, encoding='utf-8')
+        dataframe = pd.DataFrame(data, columns=["Tweet"])
+        dataframe["Value"] = 'Undef'
+        dataframe.to_csv(path, index=False, encoding='utf-8')
 
-    def openTweetsCSV(self, path):
-        gradedTweets = {}
+    def open_tweets_csv(self, path):
+        """Open tweets and return them as a dictionary
+        """
         import csv
+        graded_tweets = {}
         with open(path) as csvfile:
-            readCSV = csv.reader(csvfile, delimiter=',')
-            next(readCSV, None)
-            for i, row in enumerate(readCSV):
-                gradedTweets[i] = [row[0], row[1]]
+            read_csv = csv.reader(csvfile, delimiter=',')
+            next(read_csv, None)
+            for i, row in enumerate(read_csv):
+                graded_tweets[i] = [row[0], row[1]]
 
-        return gradedTweets # Dictionary of tweets with assigned value
+        return graded_tweets
 
-    def prettyP(self, data):
+    def pretty_print(self, data):
+        """Pretty print interface.
+        """
         import pprint
-        pp = pprint.PrettyPrinter(indent=4)
-        pp.pprint(data)
+
+        pretty_printer = pprint.PrettyPrinter(indent=4)
+        pretty_printer.pprint(data)
