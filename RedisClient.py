@@ -54,7 +54,8 @@ class RedisClient:
 
         accum = 0
         csv_dataframe = pd.read_csv(path_to_csv)
-        for i, row in csv_dataframe.iterrows():
+        iterrows = [row[1] for row in csv_dataframe.iterrows()]
+        for row in iterrows:
             words = row['Tweet']
             accum = accum + self.get_tweet_value(words)
         return accum/csv_dataframe.size
