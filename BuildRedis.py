@@ -46,7 +46,7 @@ def main():
     """
     client = set_client()
 
-    client.get_tweets("PedroFerriz", "2017-11-01", 14, "ferriztweets.csv")
+    #client.get_tweets("PedroFerriz", "2017-11-01", 14, "ferriztweets.csv")
     #client.getTweets("Mzavalagc", "2017-11-01", 10, "zavalatweets.csv")
     #client.getTweets("JoseAMeadeK", "2017-11-01", 10, "meadetweets.csv")
 
