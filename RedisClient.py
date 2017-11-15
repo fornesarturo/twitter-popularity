@@ -54,8 +54,37 @@ class RedisClient:
 
         accum = 0
         csv_dataframe = pd.read_csv(path_to_csv)
+        if (csv_dataframe.size == 0):
+            return None
         iterrows = [row[1] for row in csv_dataframe.iterrows()]
         for row in iterrows:
             words = row['Tweet']
             accum = accum + self.get_tweet_value(words)
         return accum/csv_dataframe.size
+    
+    def save_popularity(self, username, date, popularity):
+        """Save the popularity to a hash of the username
+        """
+        if self.redis.ping():
+            redis_name = username + "_tweets_popularity"
+            if self.redis.exists(redis_name):
+                if self.redis.hset(redis_name, date, popularity) == 1:
+                    print("Register created.")
+            else:
+                if self.redis.hset(redis_name, date, popularity) == 1:
+                    print("New user + register created.")
+        else:
+            print("Couldn't connect to Redis.")
+    
+    def get_popularity_history(self, username):
+        """
+        Get the popularity stored in Redis in the
+        username's hash.
+        """
+        if self.redis.ping():
+            redis_name = username + "_tweets_popularity"
+            if self.redis.exists(redis_name):
+                h_all = self.redis.hgetall(redis_name)
+                for (key, value) in zip(h_all.keys(), h_all.values()):
+                    print()
+                return h_all
