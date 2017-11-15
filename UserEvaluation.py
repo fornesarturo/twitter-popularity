@@ -35,9 +35,6 @@ if __name__ == '__main__':
     # main()
     REDIS_CLIENT = RedisClient()
 
-    result = REDIS_CLIENT.get_popularity_history("pkumamoto")
+    RESULT = REDIS_CLIENT.get_popularity_history("pkumamoto")
 
-    TWITTER_CLIENT = set_client()
-
-    for key in result.keys():
-        print(key.decode())
+    print(REDIS_CLIENT.get_usernames())

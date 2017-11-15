@@ -85,6 +85,23 @@ class RedisClient:
             redis_name = username + "_tweets_popularity"
             if self.redis.exists(redis_name):
                 h_all = self.redis.hgetall(redis_name)
-                for (key, value) in zip(h_all.keys(), h_all.values()):
-                    print()
-                return h_all
+                user_dictionary = {}
+                user_dictionary[username] = []
+                for key, value in zip(h_all.keys(), h_all.values()):
+                    key_string = key.decode()
+                    value_float = float(value)
+                    user_dictionary[username].append((key_string, value_float))
+                return user_dictionary
+            else:
+                return None
+        else:
+            return None
+
+    def get_usernames(self):
+        """Returns a list of the usernames currently in Redis
+        """
+        if self.redis.ping():
+            users = self.redis.keys("*_tweets_popularity")
+            return [user.decode() for user in users]
+        else:
+            return []
