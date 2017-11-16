@@ -96,7 +96,8 @@ class TwitterClient:
             read_csv = csv.reader(csvfile, delimiter=',')
             next(read_csv, None)
             for i, row in enumerate(read_csv):
-                graded_tweets[i] = [row[0], row[1]]
+                if len(row) == 2:
+                    graded_tweets[i] = [row[0], row[1]]
 
         return graded_tweets
 

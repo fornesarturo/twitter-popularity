@@ -102,6 +102,9 @@ class RedisClient:
         """
         if self.redis.ping():
             users = self.redis.keys("*_tweets_popularity")
-            return [user.decode() for user in users]
+            user_list = [user.decode() for user in users]
+            for i, user in enumerate(user_list):
+                user_list[i] = user.replace("_tweets_popularity", "")
+            return user_list
         else:
             return []
