@@ -1,15 +1,15 @@
-'''Printing module
-'''
+"""Printing module
+"""
+import datetime as dt
 import matplotlib.pyplot as plt
 import matplotlib.dates as mdates
-import datetime as dt
 import numpy as np
 
 DATE_FORMAT = "%Y-%m-%d"
 
 def user_to_name(argument):
-    '''Switch functionality
-    '''
+    """Switch functionality
+    """
     switcher = {
         "lopezobrador_": "A. López Obrador",
         "RicardoAnayaC": "R. Anaya Cortés",
@@ -33,15 +33,15 @@ def user_to_name(argument):
     return switcher.get(argument, "nothing")
 
 def print_popularity(candidates_list, party=None):
-    '''Plots candidates popularity
-    '''
+    """Plots candidates popularity
+    """
 
-    '''
+    """
     candidates_list = {
         "A":[("2017-10-01",10),("2017-10-02",12)],
         "B":[("2017-10-01",8),("2017-10-02",15)]
     }
-    '''
+    """
 
     plt.clf()
     plt.xlabel("Days")
@@ -86,8 +86,8 @@ def pretty_print(data):
     pretty_printer.pprint(data)
 
 def main():
-    '''Main function
-    '''
+    """Main function
+    """
     #print_popularity(None)
 
 if __name__ == '__main__':

@@ -14,8 +14,8 @@ PRD = ["Silvano_A", "ManceraMiguelMX"]
 INDEPENDENT = ["Mzavalagc", "RiosPiterJaguar", "JaimeRdzNL", "PedroFerriz"]
 
 def do_evaluation(username, date):
-    '''Do twitter evaluation
-    '''
+    """Do twitter evaluation
+    """
     twitter_client = set_client()
     redis_client = RedisClient()
 
@@ -39,8 +39,8 @@ def do_evaluation(username, date):
         print("No tweets available for this date.")
 
 def string_to_list(argument):
-    '''Switch functionality
-    '''
+    """Switch functionality
+    """
     switcher = {
         "PRD": PRD,
         "MORENA": MORENA,
@@ -58,8 +58,8 @@ def string_to_list(argument):
         return switcher.get(argument, "nothing")
 
 def plot_evaluations(party=None):
-    '''Plot all available results
-    '''
+    """Plot all available results
+    """
     redis_client = RedisClient()
 
     user_list = []
@@ -91,26 +91,29 @@ def main():
     candidates2 = MORENA + PAN + PRD
 
     # Uncomment following fors (Execute first for and wait 15 minutes, then execute second for)
-    '''
+    """
     for candidate in candidates1:
         for i in range(5, 16):
             my_date = dt.date(2017, 11, i)
             do_evaluation(candidate, my_date.strftime("%Y-%m-%d"))
-    '''
-    '''
+    """
+    """
     for candidate in candidates2:
         for i in range(5, 16):
             my_date = dt.date(2017, 11, i)
             do_evaluation(candidate, my_date.strftime("%Y-%m-%d"))S
-    '''
+    """
     while True:
         # Write PAN, PRD, PRI, MORENA, INDEPENDENT or leave empty for all available
         party = input(
             "Partido (PAN, PRD, PRI, MORENA, INDEPENDENT," +\
-            " exit, para todos sólo enter, para varios concatenar con '+'): \n")
+            " exit/Exit, vacío para todos, para varios concatenar con '+'): \n")
         if party == "exit" or party == "Exit":
             break
-        plot_evaluations(party)
+        elif not party:
+            plot_evaluations()
+        else:
+            plot_evaluations(party)
 
 if __name__ == '__main__':
     main()
