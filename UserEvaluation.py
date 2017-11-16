@@ -48,7 +48,14 @@ def string_to_list(argument):
         "PAN": PAN,
         "INDEPENDENT": INDEPENDENT
     }
-    return switcher.get(argument, "nothing")
+    
+    if len(argument.split("+")) > 1:
+        final_parties = []
+        for party in argument.split("+"):
+            final_parties += switcher.get(party, "nothing")
+        return final_parties
+    else:
+        return switcher.get(argument, "nothing")
 
 def plot_evaluations(party=None):
     '''Plot all available results
@@ -96,7 +103,7 @@ def main():
             my_date = dt.date(2017, 11, i)
             do_evaluation(candidate, my_date.strftime("%Y-%m-%d"))S
     '''
-    plot_evaluations() # Write PAN, PRD, PRI, MORENA, INDEPENDENT or leave empty for all available
+    plot_evaluations("PAN") # Write PAN, PRD, PRI, MORENA, INDEPENDENT or leave empty for all available
 
 if __name__ == '__main__':
     main()
