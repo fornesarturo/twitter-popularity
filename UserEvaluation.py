@@ -103,8 +103,14 @@ def main():
             my_date = dt.date(2017, 11, i)
             do_evaluation(candidate, my_date.strftime("%Y-%m-%d"))S
     '''
-    while(True):
-        plot_evaluations(input("Partido: ")) # Write PAN, PRD, PRI, MORENA, INDEPENDENT or leave empty for all available
+    while True:
+        # Write PAN, PRD, PRI, MORENA, INDEPENDENT or leave empty for all available
+        party = input(
+            "Partido (PAN, PRD, PRI, MORENA, INDEPENDENT," +\
+            " exit, para todos sólo enter, para varios concatenar con '+'): \n")
+        if party == "exit" or party == "Exit":
+            break
+        plot_evaluations(party)
 
 if __name__ == '__main__':
     main()
