@@ -1,7 +1,6 @@
 """
 This is the main module.
 """
-import datetime as dt
 from BuildRedis import set_client
 from RedisClient import RedisClient
 from PlotPopularity import print_popularity
